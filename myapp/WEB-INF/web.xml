@@ -48,7 +48,7 @@
 		<servlet-name>EnvironmentVariableServlet</servlet-name>
 		<display-name>EnvironmentVariableServlet</display-name>
 		<description>See environment variables</description>
-		<servlet-class>com.test.servlet.EnvironmentVariableServlet</servlet-class>
+		<servlet-class>mypkg.EnvironmentVariableServlet</servlet-class>
 		<!--Un-comment  below line if you want to instantiate and initialize the servlet during the servlet-container(tomcat) startup-->
 		<!-- <load-on-startup>1</load-on-startup> -->
 	</servlet>
@@ -62,7 +62,7 @@
   	<servlet-name>TestSessionServlet</servlet-name>
   	<display-name>TestSessionServlet</display-name>
   	<description>Test session</description>
-  	<servlet-class>com.test.servlet.TestSessionServlet</servlet-class>
+  	<servlet-class>mypkg.TestSessionServlet</servlet-class>
   	<!--Un-comment  below line if you want to instantiate and initialize the servlet during the servlet-container(tomcat) startup-->
   	<!-- <load-on-startup>1</load-on-startup> -->
   </servlet>
@@ -77,7 +77,7 @@
   	<servlet-name>LogoutServlet</servlet-name>
   	<display-name>LogoutServlet</display-name>
   	<description>Logout from session</description>
-  	<servlet-class>com.test.servlet.LogoutServlet</servlet-class>
+  	<servlet-class>mypkg.LogoutServlet</servlet-class>
   </servlet>
   
   <servlet-mapping>
@@ -89,7 +89,7 @@
   	<servlet-name>TestDataPlaceHolderServlet</servlet-name>
   	<display-name>TestDataPlaceHolderServlet</display-name>
   	<description>Test data stored in request, session and servlet context</description>
-  	<servlet-class>com.test.servlet.TestDataPlaceHolderServlet</servlet-class>
+  	<servlet-class>mypkg.TestDataPlaceHolderServlet</servlet-class>
   </servlet>
   
   
