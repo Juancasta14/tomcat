@@ -1,0 +1,113 @@
+Servidor
+
+import socket
+
+def decode_message(encoded_message):
+    # Decodificar el mensaje recibido
+    m = 1
+    while 2**m < len(encoded_message) + m + 1:
+        m += 1
+
+    decoded_message = list(encoded_message)
+
+    error_bit = 0
+    for i in range(m):
+        position = 2**i - 1
+        count = 0
+        for j in range(len(decoded_message)):
+            if (j+1) & (position+1) and decoded_message[j] == '1':
+                count += 1
+        if count % 2 != 0:
+            error_bit += position + 1
+
+    if error_bit:
+        decoded_message[error_bit - 1] = '1' if decoded_message[error_bit - 1] == '0' else '0'
+
+    # Eliminar bits de paridad
+    decoded_message = [decoded_message[i] for i in range(len(decoded_message)) if (i+1) & i != 0]
+
+    # Convertir de binario a caracteres
+    decoded_message = ''.join([chr(int(decoded_message[i:i+8], 2)) for i in range(0, len(decoded_message), 8)])
+
+    return decoded_message
+
+def main():
+    host = '127.0.0.1'
+    port = 12345
+
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_socket.bind((host, port))
+    server_socket.listen(1)
+
+    print("Servidor escuchando en {}:{}...".format(host, port))
+
+    client_socket, client_address = server_socket.accept()
+    print("Conexión establecida desde:", client_address)
+
+    encoded_message = client_socket.recv(1024).decode()
+    print("Mensaje codificado recibido:", encoded_message)
+
+    decoded_message = decode_message(encoded_message)
+    print("Mensaje decodificado:", decoded_message)
+
+    client_socket.close()
+    server_socket.close()
+
+if __name__ == "__main__":
+    main()
+
+
+
+
+
+cliente
+
+import socket
+
+def encode_message(message):
+    # Convertir el mensaje a una cadena binaria
+    binary_message = ''.join(format(ord(char), '08b') for char in message)
+
+    # Calcular el número de bits de paridad necesarios (m)
+    m = 1
+    while 2**m < len(binary_message) + m + 1:
+        m += 1
+
+    # Insertar bits de paridad en las posiciones adecuadas
+    encoded_message = list(binary_message)
+    for i in range(m):
+        position = 2**i - 1
+        encoded_message.insert(position, '0')
+
+    # Calcular bits de paridad
+    for i in range(m):
+        position = 2**i - 1
+        count = 0
+        for j in range(len(encoded_message)):
+            if (j+1) & (position+1) and encoded_message[j] == '1':
+                count += 1
+        if count % 2 == 0:
+            encoded_message[position] = '0'
+        else:
+            encoded_message[position] = '1'
+
+    return ''.join(encoded_message)
+
+def main():
+    host = '127.0.0.1'
+    port = 12345
+
+    message = input("Ingrese el mensaje que desea enviar: ")
+    encoded_message = encode_message(message)
+
+    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client_socket.connect((host, port))
+
+    client_socket.send(encoded_message.encode())
+    print("Mensaje codificado enviado al servidor:", encoded_message)
+
+    client_socket.close()
+
+if __name__ == "__main__":
+    main()
+
